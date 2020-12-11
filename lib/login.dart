@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 
 import './home.dart';
+import './loginapi.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  String uiEmail, uiPassword;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  Future<AdminLog> futureAdminLog;
+
+  @override
+  void initState() {
+    super.initState();
+    futureAdminLog = fetchAdminLog();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +85,14 @@ class LoginScreen extends StatelessWidget {
                               padding:
                                   EdgeInsets.fromLTRB(20.0, 20.0, 30.0, 20.0),
                               child: TextFormField(
+                                //..,...........................................***...Email TextField
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter you email';
+                                  }
+                                  return null;
+                                },
+                                controller: emailController,
                                 keyboardType: TextInputType.emailAddress,
                                 autofocus: false,
                                 //initialValue: 'user@example.com',
@@ -94,6 +120,8 @@ class LoginScreen extends StatelessWidget {
                             padding:
                                 EdgeInsets.fromLTRB(20.0, 30.0, 30.0, 20.0),
                             child: TextFormField(
+                              //................................................***...Password TextField
+                              controller: passwordController,
                               autofocus: false,
                               //initialValue: 'some password',
                               obscureText: true,
@@ -116,15 +144,15 @@ class LoginScreen extends StatelessWidget {
                             padding:
                                 EdgeInsets.fromLTRB(30.0, 80.0, 30.0, 10.0),
                             child: RaisedButton(
+                              //................................................***...Login Button
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               onPressed: () {
                                 //Navigator.of(context).pushNamed(HomePage.tag);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen()));
+                                uiEmail = emailController.text;
+                                uiPassword = passwordController.text;
+                                loginVerification();
                               },
                               padding: EdgeInsets.fromLTRB(40, 15, 40, 15),
                               color: Colors.black,
@@ -149,5 +177,37 @@ class LoginScreen extends StatelessWidget {
             ),
           ],
         ));
+  }
+
+  dynamic loginVerification() {
+    //..........................................................................***...Login Verification Function
+    FutureBuilder<AdminLog>(
+        future: futureAdminLog,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.email == uiEmail ||
+                snapshot.data.password == uiPassword) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
+            } else {
+              BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                  child: AlertDialog(
+                    title: new Text('Invalid Credentials!'),
+                    content: new Text(
+                        'Please provide an authorized email or password'),
+                    actions: <Widget>[
+                      new FlatButton(
+                        child: new Text("Try Again"),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ));
+            }
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return null;
+        });
   }
 }

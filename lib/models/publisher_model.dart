@@ -5,10 +5,12 @@ class PublisherModel {
 
   final String email;
 
+  // ignore: non_constant_identifier_names
   final String published_post;
 
   final String avatarUrl;
 
+  // ignore: non_constant_identifier_names
   PublisherModel({this.name, this.email, this.published_post, this.avatarUrl});
 }
 
