@@ -1,9 +1,96 @@
 import 'package:flutter/material.dart';
 
-import './models/publisher_model.dart';
+import './publisher_api_info.dart';
 import './publisherlistapi.dart';
 
 class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  var _publisher;
+
+  @override
+  void initState() {
+    _publisher = ApiManager().getPublisherList();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        //centerTitle: true,
+        backgroundColor: Colors.amber,
+        title: new Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Home', //AppBar
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      ),
+      body: getCard(),
+    );
+  }
+
+  Widget getBody() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  Widget getCard() {
+    return Container(
+      child: FutureBuilder<PublisherModel>(
+        future: _publisher,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data.publishers.length,
+              itemBuilder: (context, index) {
+                //var publisher = snapshot.data.publishers[index];
+                return Card(
+                    child: ListTile(
+                  leading: new CircleAvatar(
+                    foregroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.grey,
+                    backgroundImage:
+                        NetworkImage(snapshot.data.publishers[index].avatarUrl),
+                  ),
+                  title: new Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      new Text(
+                        snapshot.data.publishers[index].name,
+                        style: new TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      new Text(
+                        snapshot.data.publishers[index].publishedpost,
+                        style:
+                            new TextStyle(color: Colors.grey, fontSize: 14.0),
+                      ),
+                    ],
+                  ),
+                  subtitle: new Container(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Text(
+                      snapshot.data.publishers[index].email,
+                      style: new TextStyle(color: Colors.grey, fontSize: 15.0),
+                    ),
+                  ),
+                ));
+              },
+            );
+          } else
+            return getBody();
+          //CircularProgressIndicator()
+        },
+      ),
+    );
+  }
+}
+
+/*class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -89,4 +176,4 @@ class _HomeScreenState extends State<HomeScreen> {
         )*/
         );
   }
-}
+}*/

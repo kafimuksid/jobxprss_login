@@ -1,17 +1,38 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<AdminLog> fetchAdminLog() async {
+import './publisher_api_info.dart';
+
+class ApiManager {
+  Future<PublisherModel> getPublisherList() async {
+    var client = http.Client();
+    var newsModel;
+    var string =
+        "https://raw.githubusercontent.com/kafimuksid/test_api/main/publisherdb.json";
+    try {
+      var response = await client.get(string);
+      if (response.statusCode == 200) {
+        var jsonString = response.body;
+        var jsonMap = json.decode(jsonString);
+        newsModel = PublisherModel.fromJson(jsonMap);
+        print(newsModel);
+      }
+    } catch (Exception) {
+      return newsModel;
+    }
+    return newsModel;
+  }
+}
+
+/*Future<PublisherList> fetchPublisherList() async {
   final response = await http.get(
-      'https://raw.githubusercontent.com/kafimuksid/test_api/main/adminlog.json');
+      'https://raw.githubusercontent.com/kafimuksid/test_api/main/publisherdb.json');
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    return AdminLog.fromJson(jsonDecode(response.body));
+    return PublisherList.fromJson(jsonDecode(response.body));
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -19,19 +40,20 @@ Future<AdminLog> fetchAdminLog() async {
   }
 }
 
-class AdminLog {
+class PublisherList {
   final String name;
   final String email;
-  final String password;
+  final String publishedpost;
+  final String hero;
 
-  AdminLog({this.name, this.email, this.password});
+  PublisherList({this.name, this.email, this.publishedpost, this.hero});
 
-  factory AdminLog.fromJson(Map<String, dynamic> json) {
-    return AdminLog(
-      name: json['name'],
-      email: json['email'],
-      password: json['password'],
-    );
+  factory PublisherList.fromJson(Map<String, dynamic> json) {
+    return PublisherList(
+        name: json['name'],
+        email: json['email'],
+        publishedpost: json['publishedpost'],
+        hero: json['avatarUrl']);
   }
 }
 
@@ -45,12 +67,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<AdminLog> futureAdminLog;
+  Future<PublisherList> futurePublisherList;
 
   @override
   void initState() {
     super.initState();
-    futureAdminLog = fetchAdminLog();
+    futurePublisherList = fetchPublisherList();
   }
 
   @override
@@ -65,8 +87,8 @@ class _MyAppState extends State<MyApp> {
           title: Text('Fetch Data Example'),
         ),
         body: Center(
-          child: FutureBuilder<AdminLog>(
-            future: futureAdminLog,
+          child: FutureBuilder<PublisherList>(
+            future: futurePublisherList,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Text(snapshot.data.name);
@@ -82,4 +104,4 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
-}
+}*/
