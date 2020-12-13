@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: new Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Home', //AppBar
+            'Publisher List', //AppBar
             style: TextStyle(color: Colors.black),
           ),
         ),
