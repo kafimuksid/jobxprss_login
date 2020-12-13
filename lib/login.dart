@@ -216,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               );
             } else
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
           },
         ));
   }

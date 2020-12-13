@@ -13,8 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'JobXprss Admin',
       debugShowCheckedModeBanner: false,
-      theme:
-          ThemeData(primarySwatch: Colors.amber, brightness: Brightness.dark),
+      theme: ThemeData(
+          primarySwatch: Colors.amber,
+          accentColor: Colors.amberAccent,
+          brightness: Brightness.dark),
       home: SplashScreen(),
     );
   }
