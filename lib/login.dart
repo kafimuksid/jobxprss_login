@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               'Find Jobs, Employment & Career oppotunities')), //Brief Description
                       Positioned.fill(
                         child: new Container(
-                            height: MediaQuery.of(context).size.height * 0.60,
+                            height: MediaQuery.of(context).size.height * 0.65,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                                 color: Colors.amber[300],
@@ -193,6 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     },
                                     padding:
                                         EdgeInsets.fromLTRB(40, 15, 40, 15),
+
                                     color: Colors.black,
                                     child: Text('Log In',
                                         style: TextStyle(
